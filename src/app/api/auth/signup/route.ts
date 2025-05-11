@@ -124,11 +124,22 @@ export const POST = async (request: NextRequest) => {
         { status: 500 }
       );
     }
+
+    console.log("Email response is", emailResponse);
+
     // Return a success response
     return NextResponse.json(
       {
         success: true,
         message: "User registered successfully.Please verify your email",
+        data: {
+          id: String(newUser._id),
+          fullName,
+          email,
+          profilePicture: {
+            url: newUser.profilePicture?.url,
+          },
+        },
       },
       { status: 201 }
     );

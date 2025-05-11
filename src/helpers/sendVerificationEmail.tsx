@@ -62,7 +62,7 @@ export const sendVerificationEmail = async (data: {
       html: emailHtml,
     });
 
-    console.log(result);
+    console.log("result is ", result);
     return { success: true, message: "Verification email sent." };
   } catch (error) {
     console.error("Error sending email:", error);

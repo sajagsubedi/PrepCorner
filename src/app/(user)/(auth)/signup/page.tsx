@@ -68,9 +68,10 @@ export default function Page() {
         }
       );
       toast.success(response.data.message);
-      const userData = response.data.data as { _id: string };
-      router.replace(`/verify/${userData._id}`);
+      const userData = response.data.data as { id: string };
+      router.replace(`/verify/${userData.id}`);
     } catch (error) {
+      console.log("Error is ", error);
       const axiosError = error as AxiosError<ApiResponse>;
       const errorMessage =
         axiosError?.response?.data?.message ||
@@ -80,7 +81,7 @@ export default function Page() {
   };
 
   return (
-    <section className="text-gray-600 body-font px-6 pt-16 flex justify-center">
+    <section className="text-gray-600 body-font px-6 flex justify-center bg-white w-max mx-auto py-5 rounded mt-15">
       <div className="w-full sm:w-[325px] flex flex-col">
         <h2 className=" text-2xl md:text-3xl mb-4 font-bold title-font text-left ">
           Get <span className="text-black">Started</span> with us

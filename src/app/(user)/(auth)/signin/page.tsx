@@ -40,7 +40,7 @@ export default function Page() {
   };
 
   return (
-    <section className="text-gray-600 body-font px-6 pt-20 flex justify-center">
+    <section className="text-gray-600 body-font px-6 pt-5 mt-20 flex justify-center mx-auto bg-white w-max rounded">
       <div className="w-full sm:w-[325px] flex flex-col">
         <h2 className="text-2xl md:text-3xl mb-4 font-bold title-font text-left">
           Hey&#44;
