@@ -14,6 +14,7 @@ declare module "next-auth" {
       };
       _id?: string;
       email?: string;
+      fullName: string;
       isVerified?: boolean;
       userRole: UserRole;
     } & DefaultSession["user"];
@@ -25,6 +26,7 @@ declare module "next-auth" {
       url: string;
     };
     email?: string;
+    fullName: string;
     isVerified?: boolean;
     userRole: UserRole;
   }
@@ -37,6 +39,7 @@ declare module "next-auth/jwt" {
       url: string;
     };
     email?: string;
+    fullName: string;
     isVerified?: boolean;
     userRole: UserRole;
   }

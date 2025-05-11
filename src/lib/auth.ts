@@ -61,6 +61,7 @@ export const authOptions: NextAuthOptions = {
         token._id = user._id?.toString();
         token.profilePicture = user.profilePicture;
         token.email = user.email;
+        token.fullName = user.fullName;
         token.isVerified = user.isVerified;
         token.userRole = user.userRole as UserRole;
       }
@@ -71,6 +72,7 @@ export const authOptions: NextAuthOptions = {
         session.user._id = token._id as string;
         session.user.profilePicture = token.profilePicture;
         session.user.email = token.email as string;
+        session.user.fullName = token.fullName as string;
         session.user.isVerified = token.isVerified as boolean;
         session.user.userRole = token.userRole as UserRole;
       }

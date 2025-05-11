@@ -1,13 +1,13 @@
 import mongoose, { Document, Schema } from "mongoose";
 
-export interface Class extends Document {
+export interface ICourse extends Document {
   name: string;
   description: string;
   createdAt: Date;
   updatedAt: Date;
 }
 
-const classSchema = new Schema<Class>(
+const courseSchema = new Schema<ICourse>(
   {
     name: {
       type: String,
@@ -26,8 +26,8 @@ const classSchema = new Schema<Class>(
   { timestamps: true }
 );
 
-const ClassModel =
-  (mongoose.models.Class as mongoose.Model<Class>) ||
-  mongoose.model("Class", classSchema);
+const CourseModel =
+  (mongoose.models.Course as mongoose.Model<ICourse>) ||
+  mongoose.model("Course", courseSchema);
 
-export default ClassModel;
+export default CourseModel;

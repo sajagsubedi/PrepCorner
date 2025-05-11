@@ -84,7 +84,7 @@ export default function Page() {
     <section className="text-gray-600 body-font px-6 flex justify-center bg-white w-max mx-auto py-5 rounded mt-15">
       <div className="w-full sm:w-[325px] flex flex-col">
         <h2 className=" text-2xl md:text-3xl mb-4 font-bold title-font text-left ">
-          Get <span className="text-black">Started</span> with us
+          Get <span className="text-primary">Started</span> with us
         </h2>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="mb-4">
@@ -132,7 +132,7 @@ export default function Page() {
               {...register("fullName")}
               required
               placeholder="John Doe"
-              className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+              className="w-full bg-white rounded border border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/40 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
             />
             {errors.fullName && (
               <p className="text-red-500 text-sm">{errors.fullName.message}</p>
@@ -149,7 +149,7 @@ export default function Page() {
               {...register("email")}
               required
               placeholder="johndoe@example.com"
-              className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+              className="w-full bg-white rounded border border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/40 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
             />
             {errors.email && (
               <p className="text-red-500 text-sm">{errors.email.message}</p>
@@ -169,7 +169,7 @@ export default function Page() {
               {...register("password")}
               required
               placeholder="••••••••"
-              className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+              className="w-full bg-white rounded border border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/40 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
             />
             {errors.password && (
               <p className="text-red-500 text-sm">{errors.password.message}</p>
@@ -188,7 +188,7 @@ export default function Page() {
         </div>
         <p className="flex gap-2 justify-end mt-6">
           Already have an account?
-          <Link className="text-gray-500 underline" href="/signin">
+          <Link className="text-primary underline" href="/signin">
             Signin
           </Link>
         </p>

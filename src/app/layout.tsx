@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import AuthProvider from "@/context/AuthProvider";
-import Navbar from "@/components/navbar";
-import Footer from "@/components/footer";
 import { ToastContainer } from "react-toastify";
 
 const geistSans = Geist({
@@ -37,11 +35,7 @@ export default function RootLayout({
           style={{ width: "230px" }}
         />
 
-        <AuthProvider>
-          <Navbar />
-          <main className="py-20 min-h-screen">{children}</main>
-          <Footer />
-        </AuthProvider>
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
   );

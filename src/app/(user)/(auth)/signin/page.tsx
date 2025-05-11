@@ -35,7 +35,7 @@ export default function Page() {
     if (result?.error) {
       toast.error("Invalid credentials");
     } else {
-      router.push("/");
+      router.push("/dashboard");
     }
   };
 
@@ -45,7 +45,7 @@ export default function Page() {
         <h2 className="text-2xl md:text-3xl mb-4 font-bold title-font text-left">
           Hey&#44;
           <br />
-          <span className="text-black">Welcome</span> back.
+          <span className="text-primary">Welcome</span> back.
         </h2>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="relative mb-4">
@@ -58,7 +58,7 @@ export default function Page() {
               {...register("email")}
               required
               placeholder="Enter your email"
-              className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+              className="w-full bg-white rounded border border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/40 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
             />
           </div>
           <div className="relative mb-4">
@@ -74,7 +74,7 @@ export default function Page() {
               {...register("password")}
               placeholder="••••••••"
               required
-              className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+              className="w-full bg-white rounded border border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/40 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
             />
           </div>
           <Button type="submit" disabled={isSubmitting} className="w-full">
@@ -89,7 +89,7 @@ export default function Page() {
         </div>
         <p className="flex gap-2 justify-end mt-6">
           Don&apos;t have an account?
-          <Link className="text-gray-500 underline" href="/signup">
+          <Link className="text-primary underline" href="/signup">
             Signup
           </Link>
         </p>

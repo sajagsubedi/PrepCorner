@@ -1,64 +1,14 @@
 import mongoose, { Document, Schema } from "mongoose";
 
-interface Answer {
-  answer: string;
-}
-
-interface Question {
-  body: string;
-  answers: Answer[];
-  correctAnswer: number; // index of correct answer in answers array
-}
-
-export interface QuestionSet extends Document {
+export interface ICategory extends Document {
   name: string;
-  duration: number; // in seconds or minutes
-  numberOfQuestions: number;
-  questions: Question[];
-  categoryId: mongoose.Types.ObjectId;
+  description: string;
+  courseId: mongoose.Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
 }
 
-const answerSchema = new Schema<Answer>(
-  {
-    answer: {
-      type: String,
-      required: true,
-    },
-  },
-  { _id: false }
-);
-
-const questionSchema = new Schema<Question>(
-  {
-    body: {
-      type: String,
-      required: true,
-    },
-    answers: {
-      type: [answerSchema],
-      required: true,
-      validate: [
-        (arr: Answer[]) => arr.length >= 2,
-        "At least 2 answers required",
-      ],
-    },
-    correctAnswer: {
-      type: Number,
-      required: true,
-      validate: {
-        validator: function (this: Question, value: number) {
-          return value >= 0 && value < this.answers.length;
-        },
-        message: "correctAnswer index must point to one of the answers",
-      },
-    },
-  },
-  { _id: false }
-);
-
-const questionSetSchema = new Schema<QuestionSet>(
+const categorySchema = new Schema<ICategory>(
   {
     name: {
       type: String,
@@ -67,37 +17,23 @@ const questionSetSchema = new Schema<QuestionSet>(
       maxlength: 100,
       trim: true,
     },
-    duration: {
-      type: Number,
+    description: {
+      type: String,
       required: true,
-      min: 1, // duration must be positive
+      minlength: 5,
+      maxlength: 1000,
     },
-    numberOfQuestions: {
-      type: Number,
-      required: true,
-      min: 1,
-    },
-    questions: {
-      type: [questionSchema],
-      required: true,
-      validate: {
-        validator: function (this: QuestionSet, val: Question[]) {
-          return val.length === this.numberOfQuestions;
-        },
-        message: "questions array length must match numberOfQuestions",
-      },
-    },
-    categoryId: {
+    courseId: {
       type: Schema.Types.ObjectId,
-      ref: "Category",
+      ref: "Class",
       required: true,
     },
   },
   { timestamps: true }
 );
 
-const QuestionSetModel =
-  (mongoose.models.QuestionSet as mongoose.Model<QuestionSet>) ||
-  mongoose.model("QuestionSet", questionSetSchema);
+const CategoryModel =
+  (mongoose.models.Category as mongoose.Model<ICategory>) ||
+  mongoose.model("Category", categorySchema);
 
-export default QuestionSetModel;
+export default CategoryModel;
