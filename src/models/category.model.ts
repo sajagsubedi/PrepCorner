@@ -25,7 +25,7 @@ const categorySchema = new Schema<ICategory>(
     },
     courseId: {
       type: Schema.Types.ObjectId,
-      ref: "Class",
+      ref: "Course",
       required: true,
     },
   },

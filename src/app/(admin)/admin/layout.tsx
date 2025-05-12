@@ -29,7 +29,7 @@ export default function DashboardLayout({
   return (
     <AdminDashboardGuard>
       <DashboardSideBar navlinks={navlinks} />
-      <main className="lg:pl-56 sm:pl-14 bg-gray-50">{children}</main>
+      <main className="lg:pl-56 sm:pl-14">{children}</main>
     </AdminDashboardGuard>
   );
 }

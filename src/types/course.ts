@@ -1,3 +1,5 @@
+import { Category } from "./category";
+
 export interface Course {
   _id: string;
   name: string;
@@ -6,6 +8,7 @@ export interface Course {
     url: string;
     fileId: string;
   };
+  category?: Array<Category>;
   createdAt: Date;
   updatedAt: Date;
 }
