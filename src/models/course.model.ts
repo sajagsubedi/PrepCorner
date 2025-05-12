@@ -3,6 +3,10 @@ import mongoose, { Document, Schema } from "mongoose";
 export interface ICourse extends Document {
   name: string;
   description: string;
+  image: {
+    url: string;
+    fileId: string;
+  };
   createdAt: Date;
   updatedAt: Date;
 }
@@ -15,6 +19,10 @@ const courseSchema = new Schema<ICourse>(
       minlength: 2,
       maxlength: 100,
       trim: true,
+    },
+    image: {
+      url: { type: String, required: true },
+      fileId: { type: String, required: true },
     },
     description: {
       type: String,
