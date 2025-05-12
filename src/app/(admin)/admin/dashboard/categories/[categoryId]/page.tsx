@@ -2,46 +2,47 @@ import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import { UserRole } from "@/models/user.model";
 import { redirect } from "next/navigation";
-import { Course } from "@/types/course";
+import { Category } from "@/schemas/category";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import CourseModel from "@/models/course.model";
+import CategoryModel from "@/models/category.model";
 import mongoose from "mongoose";
 import connectDb from "@/lib/connectDb";
-import Image from "next/image";
 import { format } from "date-fns";
-import CategoryPage from "@/components/dashboard/CategorySection";
+import QuestionSetPage from "@/components/dashboard/QuestionSetPage";
 
-async function fetchCourses(courseId: string): Promise<Course | undefined> {
-  if (!mongoose.isValidObjectId(courseId)) {
+async function fetchCategories(
+  categoryId: string
+): Promise<Category | undefined> {
+  if (!mongoose.isValidObjectId(categoryId)) {
     return undefined;
   }
 
   await connectDb();
-  const course = await CourseModel.aggregate([
+  const category = await CategoryModel.aggregate([
     {
       $match: {
-        _id: new mongoose.Types.ObjectId(courseId),
+        _id: new mongoose.Types.ObjectId(categoryId),
       },
     },
     {
       $lookup: {
-        from: "categories",
+        from: "questionSets",
         localField: "_id",
-        foreignField: "courseId",
-        as: "categories",
+        foreignField: "categoryId",
+        as: "questionSets",
       },
     },
   ]);
-  console.log(course);
-  return course[0];
+  console.log(category);
+  return category[0];
 }
 
-export default async function CourseInfoPage({
+export default async function CategoryInfoPage({
   params,
 }: {
-  params: Promise<{ courseId: string }>;
+  params: Promise<{ categoryId: string }>;
 }) {
-  const { courseId } = await params;
+  const { categoryId } = await params;
   const session = await getServerSession(authOptions);
   const user = session?.user;
 
@@ -49,49 +50,46 @@ export default async function CourseInfoPage({
     redirect("/signin");
   }
 
-  const course = await fetchCourses(courseId);
+  const category = await fetchCategories(categoryId);
 
   return (
     <section className="p-6">
       <h2 className="text-3xl font-bold text-primary mb-6 uppercase">
-        Course Details
+        Category Details
       </h2>
 
-      {!course && (
+      {!category && (
         <div className="flex flex-col items-center justify-center py-12 px-4 border-2 border-dashed border-gray-200 rounded-lg">
-          <p className="text-lg text-gray-500 mb-4">Course not found!</p>
+          <p className="text-lg text-gray-500 mb-4">Category not found!</p>
         </div>
       )}
-      {course && (
+      {category && (
         <Card className="shadow-md">
           <CardContent className="p-6">
             <CardHeader>
               <h3 className="text-3xl font-semibold text-primary">
-                {course.name}
+                {category.name}
               </h3>
-              <div className="h-48 w-full rounded overflow-hidden">
-                <Image
-                  src={course.image.url}
-                  alt={course.name}
-                  width={400}
-                  height={200}
-                />
-              </div>
+              {/* Image display removed as per updated requirements */}
             </CardHeader>
             <div className="w-full flex flex-col gap-3">
               <p className="text-muted-foreground text-base">
-                {course.description}
+                {category.description}
               </p>
 
               <div className="text-sm text-muted-foreground mt-2">
-                <p>Created At: {format(new Date(course.createdAt), "PPPpp")}</p>
-                <p>Updated At: {format(new Date(course.updatedAt), "PPPpp")}</p>
+                <p>
+                  Created At: {format(new Date(category.createdAt), "PPPpp")}
+                </p>
+                <p>
+                  Updated At: {format(new Date(category.updatedAt), "PPPpp")}
+                </p>
               </div>
             </div>
           </CardContent>
-          <CategoryPage
-            categories={JSON.stringify(course?.categories)}
-            courseId={courseId}
+          <QuestionSetPage
+            questionSets={category.questionSets || []}
+            categoryId={categoryId}
           />
         </Card>
       )}

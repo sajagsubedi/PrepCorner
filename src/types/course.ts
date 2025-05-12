@@ -1,4 +1,4 @@
-import { Category } from "./category";
+import { Category } from "../schemas/category";
 
 export interface Course {
   _id: string;
@@ -8,7 +8,7 @@ export interface Course {
     url: string;
     fileId: string;
   };
-  category?: Array<Category>;
+  categories: Array<Category>;
   createdAt: Date;
   updatedAt: Date;
 }

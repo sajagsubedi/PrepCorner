@@ -2,59 +2,56 @@
 
 import React, { useState } from "react";
 import { Plus } from "lucide-react";
-import { CategoryCard } from "@/components/dashboard/CategoryCard";
-import CategoryModal from "@/components/dashboard/CategoryModal";
-import { Category } from "@/schemas/category";
-import { CategoryInput } from "@/schemas/categorySchema";
+import { QuestionSet } from "@/types/questionSet";
 import axios, { AxiosError } from "axios";
 import { ApiResponse } from "@/types/ApiResponse";
 import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
+import { QuestionSetInput } from "@/schemas/questionSetSchema";
+import { QuestionSetCard } from "./QuestionSetCard";
+import QuestionSetModal from "./QuestionSetModal";
 
-interface CategoryPageProps {
-  categories: string;
-  courseId: string;
+interface QuestionSetPageProps {
+  questionSets: QuestionSet[];
+  categoryId: string;
 }
 
-export default function CategoryPage({
-  categories,
-  courseId,
-}: CategoryPageProps) {
+export default function QuestionSetPage({
+  questionSets,
+  categoryId,
+}: QuestionSetPageProps) {
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
-    null
-  );
-  const [categoryList, setCategoryList] = useState<Category[]>(
-    JSON.parse(categories)
-  );
+  const [selectedQuestionSet, setSelectedQuestionSet] =
+    useState<QuestionSet | null>(null);
+  const [questionSetList, setQuestionSetList] =
+    useState<QuestionSet[]>(questionSets);
 
   const handleAddClick = () => {
-    setSelectedCategory(null);
+    setSelectedQuestionSet(null);
     setDialogOpen(true);
   };
 
-  const handleEditClick = (category: Category) => {
-    setSelectedCategory(category);
+  const handleEditClick = (questionSet: QuestionSet) => {
+    setSelectedQuestionSet(questionSet);
     setDialogOpen(true);
   };
 
   const onCancel = () => {
-    setSelectedCategory(null);
+    setSelectedQuestionSet(null);
     setDialogOpen(false);
   };
 
-  const handleSave = async (data: CategoryInput) => {
+  const handleSave = async (data: QuestionSetInput) => {
     try {
-      const { name, description } = data;
+      const { name } = data;
 
       const formData = new FormData();
-      formData.append("courseId", courseId);
+      formData.append("categoryId", categoryId);
       if (name) formData.append("name", name);
-      if (description) formData.append("description", description);
 
-      if (!selectedCategory) {
+      if (!selectedQuestionSet) {
         const response = await axios.post<ApiResponse>(
-          "/api/admin/categories",
+          "/api/admin/questionsets",
           formData,
           {
             headers: {
@@ -64,12 +61,15 @@ export default function CategoryPage({
         );
         toast.success(response.data.message);
         if (response.data.success) {
-          setCategoryList((prev) => [...prev, response.data.data as Category]);
+          setQuestionSetList((prev) => [
+            ...prev,
+            response.data.data as QuestionSet,
+          ]);
           setDialogOpen(false);
         }
       } else {
         const response = await axios.put<ApiResponse>(
-          `/api/admin/categories/${selectedCategory._id}`,
+          `/api/admin/questionsets/${selectedQuestionSet._id}`,
           formData,
           {
             headers: {
@@ -78,11 +78,11 @@ export default function CategoryPage({
           }
         );
         if (response.data.success) {
-          setCategoryList((prev) =>
-            prev.map((category) =>
-              category._id === selectedCategory._id
-                ? (response.data.data as Category)
-                : category
+          setQuestionSetList((prev) =>
+            prev.map((questionSet) =>
+              questionSet._id === selectedQuestionSet._id
+                ? (response.data.data as QuestionSet)
+                : questionSet
             )
           );
           toast.success(response.data.message);
@@ -93,7 +93,7 @@ export default function CategoryPage({
       const axiosError = error as AxiosError<ApiResponse>;
       const errorMessage =
         axiosError?.response?.data?.message ||
-        "There was a problem saving the category. Please try again.";
+        "There was a problem saving the question set. Please try again.";
       toast.error(errorMessage);
     }
   };
@@ -101,41 +101,41 @@ export default function CategoryPage({
   return (
     <div className="mx-auto px-7 sm:px-10 bg-transparent w-full">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-2xl font-bold text-primary">Categories</h1>
+        <h1 className="text-2xl font-bold text-primary">Question Sets</h1>
         <Button onClick={handleAddClick}>
           <Plus size={18} className="mr-2" />
-          Add Category
+          Add Question Set
         </Button>
       </div>
 
-      {categoryList.length > 0 && (
+      {questionSetList.length > 0 && (
         <p className="text-lg text-gray-500 mb-4">
-          {categoryList.length} categories found
+          {questionSetList.length} question sets found
         </p>
       )}
 
       <div className="grid grid-cols-3 gap-6">
-        {categoryList.map((category: Category) => (
-          <CategoryCard
-            key={category._id}
-            category={category}
+        {questionSetList.map((questionSet: QuestionSet) => (
+          <QuestionSetCard
+            key={questionSet._id}
+            questionSet={questionSet}
             onEdit={handleEditClick}
           />
         ))}
       </div>
 
-      {categoryList.length === 0 && (
+      {questionSetList.length === 0 && (
         <div className="flex flex-col items-center justify-center py-12 px-4 border-2 border-dashed border-gray-200 rounded-lg">
-          <p className="text-lg text-gray-500 mb-4">No categories found</p>
-          <Button onClick={handleAddClick}>Add first category</Button>
+          <p className="text-lg text-gray-500 mb-4">No question sets found</p>
+          <Button onClick={handleAddClick}>Add first question set</Button>
         </div>
       )}
 
-      <CategoryModal
+      <QuestionSetModal
         open={dialogOpen}
         onOpenChange={setDialogOpen}
         onSave={handleSave}
-        category={selectedCategory}
+        questionSet={selectedQuestionSet}
         onCancel={onCancel}
       />
     </div>
