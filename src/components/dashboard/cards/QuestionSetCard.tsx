@@ -29,7 +29,7 @@ export const QuestionSetCard: React.FC<QuestionSetCardProps> = ({
           Edit
         </Button>
         <Button variant="outline">
-          <Link href={`questionSets/${questionSet._id}`} className="flex gap-2">
+          <Link href={`../questions/${questionSet._id}`} className="flex gap-2">
             <Eye className="w-4 h-4" />
             View
           </Link>

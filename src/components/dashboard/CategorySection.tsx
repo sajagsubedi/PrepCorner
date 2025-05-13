@@ -2,8 +2,8 @@
 
 import React, { useState } from "react";
 import { Plus } from "lucide-react";
-import { CategoryCard } from "@/components/dashboard/CategoryCard";
-import CategoryModal from "@/components/dashboard/CategoryModal";
+import { CategoryCard } from "@/components/dashboard/cards/CategoryCard";
+import CategoryModal from "@/components/dashboard/modals/CategoryModal";
 import { Category } from "@/schemas/category";
 import { CategoryInput } from "@/schemas/categorySchema";
 import axios, { AxiosError } from "axios";

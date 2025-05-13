@@ -9,6 +9,16 @@ const nextConfig: NextConfig = {
         hostname: "ik.imagekit.io",
         port: "",
       },
+      {
+        protocol: "https",
+        hostname: "cdn1.byjus.com",
+        port: "",
+      },
+      {
+        protocol: "https",
+        hostname: "www.learnatnoon.com",
+        port: "",
+      },
     ],
   },
 };

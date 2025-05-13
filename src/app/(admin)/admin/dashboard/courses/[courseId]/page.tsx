@@ -10,6 +10,9 @@ import connectDb from "@/lib/connectDb";
 import Image from "next/image";
 import { format } from "date-fns";
 import CategoryPage from "@/components/dashboard/CategorySection";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 
 async function fetchCourses(courseId: string): Promise<Course | undefined> {
   if (!mongoose.isValidObjectId(courseId)) {
@@ -53,6 +56,14 @@ export default async function CourseInfoPage({
 
   return (
     <section className="p-6">
+      <Button className="items-center justify-center flex">
+        <Link
+          className="gap-2 flex items-center justify-center"
+          href={`/admin/dashboard/courses`}
+        >
+          <ArrowLeft /> Back
+        </Link>
+      </Button>
       <h2 className="text-3xl font-bold text-primary mb-6 uppercase">
         Course Details
       </h2>

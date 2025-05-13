@@ -8,11 +8,11 @@ import { ApiResponse } from "@/types/ApiResponse";
 import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
 import { QuestionSetInput } from "@/schemas/questionSetSchema";
-import { QuestionSetCard } from "./QuestionSetCard";
-import QuestionSetModal from "./QuestionSetModal";
+import { QuestionSetCard } from "./cards/QuestionSetCard";
+import QuestionSetModal from "./modals/QuestionSetModal";
 
 interface QuestionSetPageProps {
-  questionSets: QuestionSet[];
+  questionSets: string;
   categoryId: string;
 }
 
@@ -23,8 +23,9 @@ export default function QuestionSetPage({
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedQuestionSet, setSelectedQuestionSet] =
     useState<QuestionSet | null>(null);
-  const [questionSetList, setQuestionSetList] =
-    useState<QuestionSet[]>(questionSets);
+  const [questionSetList, setQuestionSetList] = useState<QuestionSet[]>(
+    JSON.parse(questionSets)
+  );
 
   const handleAddClick = () => {
     setSelectedQuestionSet(null);
@@ -50,7 +51,7 @@ export default function QuestionSetPage({
       if (name) formData.append("name", name);
 
       if (!selectedQuestionSet) {
-        const response = await axios.post<ApiResponse>(
+        const response = await axios.post<ApiResponse<QuestionSet>>(
           "/api/admin/questionsets",
           formData,
           {
@@ -68,7 +69,7 @@ export default function QuestionSetPage({
           setDialogOpen(false);
         }
       } else {
-        const response = await axios.put<ApiResponse>(
+        const response = await axios.put<ApiResponse<QuestionSet>>(
           `/api/admin/questionsets/${selectedQuestionSet._id}`,
           formData,
           {
@@ -90,7 +91,7 @@ export default function QuestionSetPage({
         }
       }
     } catch (error) {
-      const axiosError = error as AxiosError<ApiResponse>;
+      const axiosError = error as AxiosError<ApiResponse<QuestionSet>>;
       const errorMessage =
         axiosError?.response?.data?.message ||
         "There was a problem saving the question set. Please try again.";

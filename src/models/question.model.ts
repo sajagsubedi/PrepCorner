@@ -31,10 +31,6 @@ const questionSchema = new Schema<Question>(
     answers: {
       type: [answerSchema],
       required: true,
-      validate: [
-        (val: Answer[]) => val.length >= 2,
-        "At least two answers are required",
-      ],
     },
     correctAnswer: {
       type: Number,

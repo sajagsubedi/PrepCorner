@@ -2,8 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import { Plus } from "lucide-react";
-import { CourseCard } from "@/components/dashboard/CourseCard";
-import CourseModal from "@/components/dashboard/CourseModal";
+import { CourseCard } from "@/components/dashboard/cards/CourseCard";
+import CourseModal from "@/components/dashboard/modals/CourseModal";
 import { Course } from "@/types/course";
 import { CourseInput } from "@/schemas/courseSchema";
 import axios, { AxiosError } from "axios";
@@ -43,7 +43,7 @@ export default function CoursesPage() {
       if (image) formData.append("image", image);
 
       if (!selectedCourse) {
-        const response = await axios.post<ApiResponse>(
+        const response = await axios.post<ApiResponse<Course>>(
           "/api/admin/courses",
           formData,
           {
@@ -58,7 +58,7 @@ export default function CoursesPage() {
           setDialogOpen(false);
         }
       } else {
-        const response = await axios.put<ApiResponse>(
+        const response = await axios.put<ApiResponse<Course>>(
           `/api/admin/courses/${selectedCourse._id}`,
           formData,
           {
@@ -80,7 +80,7 @@ export default function CoursesPage() {
         }
       }
     } catch (error) {
-      const axiosError = error as AxiosError<ApiResponse>;
+      const axiosError = error as AxiosError<ApiResponse<Course>>;
       const errorMessage =
         axiosError?.response?.data?.message ||
         "There was a problem saving the course. Please try again.";
@@ -91,7 +91,9 @@ export default function CoursesPage() {
   const fetchCourses = async () => {
     setLoading(true);
     try {
-      const response = await axios.get<ApiResponse>("/api/admin/courses");
+      const response = await axios.get<ApiResponse<Course[]>>(
+        "/api/admin/courses"
+      );
 
       if (response.data.success && Array.isArray(response.data.data)) {
         setCourses(response.data.data as Course[]);
@@ -99,7 +101,7 @@ export default function CoursesPage() {
         toast.error("Failed to load courses.");
       }
     } catch (error) {
-      const axiosError = error as AxiosError<ApiResponse>;
+      const axiosError = error as AxiosError<ApiResponse<Course[]>>;
       const errorMessage =
         axiosError.response?.data?.message || "Error fetching courses.";
       toast.error(errorMessage);
@@ -133,7 +135,7 @@ export default function CoursesPage() {
         </p>
       )}
 
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {!loading &&
           courses.map((course: Course) => (
             <CourseCard

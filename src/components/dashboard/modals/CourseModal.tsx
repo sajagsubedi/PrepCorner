@@ -9,7 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { CourseForm } from "@/components/dashboard/CourseForm";
+import { CourseForm } from "@/components/dashboard/form/CourseForm";
 
 interface CourseDialogProps {
   open: boolean;

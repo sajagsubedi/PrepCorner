@@ -7,35 +7,35 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { QuestionSetForm } from "@/components/dashboard/QuestionSetForm";
-import { QuestionSet } from "@/types/questionSet";
-import { QuestionSetInput } from "@/schemas/questionSetSchema";
+import { CategoryForm } from "@/components/dashboard/form/CategoryForm";
+import { Category } from "@/schemas/category";
+import { CategoryInput } from "@/schemas/categorySchema";
 
-interface QuestionSetDialogProps {
+interface CategoryDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSave: (data: QuestionSetInput) => Promise<void>;
-  questionSet: QuestionSet | null;
+  onSave: (data: CategoryInput) => Promise<void>;
+  category: Category | null;
   onCancel: () => void;
 }
 
-export default function QuestionSetModal({
+export default function CategoryModal({
   open,
   onOpenChange,
   onSave,
-  questionSet,
+  category,
   onCancel,
-}: QuestionSetDialogProps) {
+}: CategoryDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            {questionSet ? "Edit Question Set" : "Add Question Set"}
+            {category ? "Edit Category" : "Add Category"}
           </DialogTitle>
         </DialogHeader>
-        <QuestionSetForm
-          defaultValues={questionSet}
+        <CategoryForm
+          defaultValues={category}
           onSubmit={onSave}
           onCancel={onCancel}
         />

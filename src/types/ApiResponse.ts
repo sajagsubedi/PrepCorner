@@ -1,13 +1,5 @@
-export interface ApiResponse {
+export interface ApiResponse<T> {
   success: boolean;
   message: string;
-  data?: unknown;
-}
-
-export interface verifyCodeInfoResponse extends ApiResponse {
-  data: {
-    fullName: string;
-    email: string;
-    verificationCodeExpiry: Date;
-  };
+  data?: T;
 }

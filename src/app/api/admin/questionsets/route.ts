@@ -21,9 +21,10 @@ export async function GET() {
   }
 
   try {
-    const questionSets = await QuestionSetModel.find({}).sort({
+    const questionSets = await QuestionSetModel.find().sort({
       createdAt: -1,
     });
+
     return NextResponse.json(
       {
         success: true,

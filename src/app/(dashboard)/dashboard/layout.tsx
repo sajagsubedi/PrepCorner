@@ -1,5 +1,5 @@
 import DashboardSideBar from "@/components/dashboard/DashboardSidebar";
-import AdminDashboardGuard from "@/components/wrappers/AdminDashboardGuard";
+import AuthGuard from "@/components/wrappers/AuthGuard";
 import { NavLink } from "@/types/UiTypes";
 import { BookOpen, ClipboardCheck, FileText, Home, Search } from "lucide-react";
 
@@ -37,9 +37,9 @@ export default function DashboardLayout({
   ];
 
   return (
-    <AdminDashboardGuard>
+    <AuthGuard>
       <DashboardSideBar navlinks={navlinks} />
       <main className="lg:pl-56 sm:pl-14">{children}</main>
-    </AdminDashboardGuard>
+    </AuthGuard>
   );
 }
