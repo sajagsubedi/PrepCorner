@@ -133,7 +133,7 @@ export const POST = async (request: NextRequest) => {
         success: true,
         message: "User registered successfully.Please verify your email",
         data: {
-          id: String(newUser._id),
+          _id: String(newUser._id),
           fullName,
           email,
           profilePicture: {

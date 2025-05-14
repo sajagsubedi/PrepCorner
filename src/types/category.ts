@@ -1,4 +1,4 @@
-import { QuestionSet } from "../types/questionSet";
+import { QuestionSet } from "@/types/questionSet";
 
 export interface Category {
   _id: string;

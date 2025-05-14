@@ -12,6 +12,7 @@ import { ApiResponse } from "@/types/ApiResponse";
 import axios, { AxiosError } from "axios";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { PUser } from "@/types/UserTypes";
 
 export default function Page() {
   const {
@@ -58,7 +59,7 @@ export default function Page() {
       formData.append("email", email);
       formData.append("password", password);
 
-      const response = await axios.post<ApiResponse>(
+      const response = await axios.post<ApiResponse<PUser>>(
         "/api/auth/signup",
         formData,
         {
@@ -68,11 +69,11 @@ export default function Page() {
         }
       );
       toast.success(response.data.message);
-      const userData = response.data.data as { id: string };
-      router.replace(`/verify/${userData.id}`);
+      const userData = response.data.data;
+      router.replace(`/verify/${userData?._id}`);
     } catch (error) {
       console.log("Error is ", error);
-      const axiosError = error as AxiosError<ApiResponse>;
+      const axiosError = error as AxiosError<ApiResponse<PUser>>;
       const errorMessage =
         axiosError?.response?.data?.message ||
         "There was a problem during signup. Please try again later";

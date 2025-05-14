@@ -1,4 +1,4 @@
-import { Category } from "../schemas/category";
+import { Category } from "./category";
 
 export interface Course {
   _id: string;

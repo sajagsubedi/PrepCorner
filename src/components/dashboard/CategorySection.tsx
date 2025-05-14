@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Plus } from "lucide-react";
 import { CategoryCard } from "@/components/dashboard/cards/CategoryCard";
 import CategoryModal from "@/components/dashboard/modals/CategoryModal";
-import { Category } from "@/schemas/category";
+import { Category } from "@/types/category";
 import { CategoryInput } from "@/schemas/categorySchema";
 import axios, { AxiosError } from "axios";
 import { ApiResponse } from "@/types/ApiResponse";
@@ -53,7 +53,7 @@ export default function CategoryPage({
       if (description) formData.append("description", description);
 
       if (!selectedCategory) {
-        const response = await axios.post<ApiResponse>(
+        const response = await axios.post<ApiResponse<Category>>(
           "/api/admin/categories",
           formData,
           {
@@ -68,7 +68,7 @@ export default function CategoryPage({
           setDialogOpen(false);
         }
       } else {
-        const response = await axios.put<ApiResponse>(
+        const response = await axios.put<ApiResponse<Category>>(
           `/api/admin/categories/${selectedCategory._id}`,
           formData,
           {
@@ -90,7 +90,7 @@ export default function CategoryPage({
         }
       }
     } catch (error) {
-      const axiosError = error as AxiosError<ApiResponse>;
+      const axiosError = error as AxiosError<ApiResponse<Category>>;
       const errorMessage =
         axiosError?.response?.data?.message ||
         "There was a problem saving the category. Please try again.";

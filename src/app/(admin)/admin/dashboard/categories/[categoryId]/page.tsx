@@ -6,7 +6,7 @@ import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 import Link from "next/link";
 import { ApiResponse } from "@/types/ApiResponse";
-import { Category } from "@/schemas/category";
+import { Category } from "@/types/category";
 import { UserRole } from "@/types/UserTypes";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";

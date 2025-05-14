@@ -8,7 +8,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { CategoryForm } from "@/components/dashboard/form/CategoryForm";
-import { Category } from "@/schemas/category";
+import { Category } from "@/types/category";
 import { CategoryInput } from "@/schemas/categorySchema";
 
 interface CategoryDialogProps {

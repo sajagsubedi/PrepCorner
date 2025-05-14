@@ -2,7 +2,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { categorySchema, CategoryInput } from "@/schemas/categorySchema";
-import { Category } from "@/schemas/category";
+import { Category } from "@/types/category";
 import { Button } from "@/components/ui/button";
 
 interface CategoryFormProps {

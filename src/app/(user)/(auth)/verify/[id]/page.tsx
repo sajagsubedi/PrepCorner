@@ -18,15 +18,7 @@ import { Button } from "@/components/ui/button";
 import { verifyCodeSchema } from "@/schemas/verifyCodeSchema";
 import { ApiResponse } from "@/types/ApiResponse";
 import { toast } from "react-toastify";
-import { verifyCodeInfoResponse } from "@/types/ApiResponse";
-
-interface verifyCodeInfoResponse {
-  success: boolean;
-  data: {
-    fullName: string;
-    email: string;
-  };
-}
+import { PUser } from "@/types/UserTypes";
 
 export default function Page() {
   const router = useRouter();
@@ -43,12 +35,15 @@ export default function Page() {
   useEffect(() => {
     const fetchExpiryTime = async () => {
       try {
-        const response = await axios.get<verifyCodeInfoResponse>(
+        const response = await axios.get<ApiResponse<PUser>>(
           `/api/auth/verify-code?id=${param.id}`
         );
-        const expiryTime = new Date(
-          response.data.data.verificationCodeExpiry
-        ).getTime();
+        const expiryRaw = response.data.data?.verificationCodeExpiry;
+        if (!expiryRaw) {
+          setIsExpired(true);
+          return;
+        }
+        const expiryTime = new Date(expiryRaw).getTime();
         const currentTime = Date.now();
         const remainingTime = Math.floor((expiryTime - currentTime) / 1000);
 
@@ -58,7 +53,7 @@ export default function Page() {
           setIsExpired(true);
         }
       } catch (error) {
-        const axiosError = error as AxiosError<ApiResponse>;
+        const axiosError = error as AxiosError<ApiResponse<PUser>>;
         toast.error(axiosError.message);
         setIsExpired(true);
       }
@@ -101,14 +96,17 @@ export default function Page() {
 
     setIsVerifying(true);
     try {
-      const response = await axios.post<ApiResponse>("/api/auth/verify-code", {
-        id: param.id,
-        verificationCode: data.code,
-      });
+      const response = await axios.post<ApiResponse<undefined>>(
+        "/api/auth/verify-code",
+        {
+          id: param.id,
+          verificationCode: data.code,
+        }
+      );
       toast.success(response.data.message);
       router.replace(`/sign-in`);
     } catch (error) {
-      const axiosError = error as AxiosError<ApiResponse>;
+      const axiosError = error as AxiosError<ApiResponse<undefined>>;
       const errorMessage =
         axiosError?.response?.data?.message ||
         "There was a problem verifying your account. Please try again later.";
