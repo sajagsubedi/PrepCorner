@@ -114,19 +114,22 @@ export async function POST(request: NextRequest) {
       .filter((val: QuestionInput | null) => val !== null);
 
     //upload question to db
-    const uploadedQuestions = updatedQuestionArray.map(
-      async (question: QuestionInput, ind: number) => {
+    const uploadedQuestions = updatedQuestionArray
+      .map(async (question: QuestionInput) => {
         const createdQuestion = await QuestionModel.create(question);
         if (!createdQuestion) {
-          console.log("Here Error creating question", ind);
+          return null;
         }
         return createdQuestion._id as mongoose.Types.ObjectId;
-      }
-    );
+      })
+      .filter((val: string | null) => val != null);
 
     const uploadedQuestionIds = await Promise.all(uploadedQuestions);
 
-    existingQuestionSet.questionIds = uploadedQuestionIds;
+    existingQuestionSet.questionIds = [
+      ...existingQuestionSet.questionIds,
+      ...uploadedQuestionIds,
+    ];
 
     await existingQuestionSet.save();
 
@@ -199,7 +202,7 @@ export async function POST(request: NextRequest) {
 }
 
 //code to delete unused questions
-export async function GET() {
+export async function DELETE() {
   await connectDb();
   const session = await getServerSession(authOptions);
   const user = session?.user as User | null;

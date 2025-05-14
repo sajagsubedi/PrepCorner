@@ -12,6 +12,7 @@ import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import QuestionSetPage from "@/components/dashboard/QuestionSetPage";
+import Loader from "@/components/shared/Loader";
 
 export default function CategoryInfoPage() {
   const { data: session, status } = useSession();
@@ -51,10 +52,6 @@ export default function CategoryInfoPage() {
     fetchCategory();
   }, [status, session, categoryId, router]);
 
-  if (loading) {
-    return <div className="p-6">Loading...</div>;
-  }
-
   return (
     <section className="p-6">
       <Button className="items-center justify-center flex">
@@ -69,8 +66,13 @@ export default function CategoryInfoPage() {
       <h2 className="text-3xl font-bold text-primary mb-6 uppercase">
         Category Details
       </h2>
+      {loading && (
+        <div className="flex flex-col items-center justify-center py-12 px-4 border-2 border-dashed border-gray-200 rounded-lg">
+          <Loader />
+        </div>
+      )}
 
-      {!category && (
+      {!loading && !category && (
         <div className="flex flex-col items-center justify-center py-12 px-4 border-2 border-dashed border-gray-200 rounded-lg">
           <p className="text-lg text-gray-500 mb-4">Category not found!</p>
         </div>
@@ -84,7 +86,7 @@ export default function CategoryInfoPage() {
                 {category.name}
               </h3>
             </CardHeader>
-            <div className="w-full flex flex-col gap-3">
+            <div className="w-full flex flex-col gap-3 px-7">
               <p className="text-muted-foreground text-base">
                 {category.description}
               </p>

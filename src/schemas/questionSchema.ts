@@ -61,4 +61,22 @@ export const questionBulkSchema = z.object({
     ),
 });
 
+export const questionSchema = z.object({
+  images: multipleImageSchema,
+  body: z.string().min(1, "Question body is required").trim(),
+  answers: z
+    .array(
+      z.object({
+        answer: z.string().min(1, "Answer is required").trim(),
+      })
+    )
+    .length(4, "Exactly four answers are required"),
+  correctAnswer: z
+    .number()
+    .int()
+    .min(0, "Correct answer index must be between 0 and 3")
+    .max(3, "Correct answer index must be between 0 and 3"),
+});
+
 export type questionBulkInput = z.infer<typeof questionBulkSchema>;
+export type questionInput = z.infer<typeof questionSchema>;

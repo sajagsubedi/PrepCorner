@@ -20,7 +20,7 @@ async function fetchCourses(courseId: string): Promise<Course | undefined> {
   }
 
   await connectDb();
-  const course = await CourseModel.aggregate([
+  const [course] = await CourseModel.aggregate([
     {
       $match: {
         _id: new mongoose.Types.ObjectId(courseId),
@@ -35,8 +35,7 @@ async function fetchCourses(courseId: string): Promise<Course | undefined> {
       },
     },
   ]);
-  console.log(course);
-  return course[0];
+  return course;
 }
 
 export default async function CourseInfoPage({
@@ -75,12 +74,12 @@ export default async function CourseInfoPage({
       )}
       {course && (
         <Card className="shadow-md">
-          <CardContent className="p-6">
+          <CardContent>
             <CardHeader>
               <h3 className="text-3xl font-semibold text-primary">
                 {course.name}
               </h3>
-              <div className="h-48 w-full rounded overflow-hidden">
+              <div className="h-64 w-auto rounded overflow-hidden flex justify-center relative">
                 <Image
                   src={course.image.url}
                   alt={course.name}
@@ -90,6 +89,7 @@ export default async function CourseInfoPage({
               </div>
             </CardHeader>
             <div className="w-full flex flex-col gap-3">
+              <p>Visibilty: {course.isVisible ? "Public" : "Private"}</p>
               <p className="text-muted-foreground text-base">
                 {course.description}
               </p>

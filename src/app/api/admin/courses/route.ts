@@ -61,6 +61,7 @@ export async function POST(request: NextRequest) {
     const formData = await request.formData();
     const name = formData.get("name") as string;
     const description = formData.get("description") as string;
+    const isVisible = formData.get("isVisible") as string;
     const image = formData.get("image") as File | null;
 
     if (
@@ -99,6 +100,7 @@ export async function POST(request: NextRequest) {
         url: uploadedImage.url,
         fileId: uploadedImage.fileId,
       },
+      isVisible: isVisible ? isVisible == "true" : true,
     });
 
     await newCourse.save();

@@ -1,11 +1,13 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import { ArrowLeft } from "lucide-react";
 import { QuestionSet } from "@/types/questionSet";
 import katex from "katex";
 import "katex/dist/katex.min.css";
 import parse, { HTMLReactParserOptions, Element } from "html-react-parser";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 // KaTeX Renderer Component
 const KatexRenderer: React.FC<{ latex: string }> = ({ latex }) => {
@@ -82,25 +84,33 @@ interface QuestionPageProps {
 const QuestionPage: React.FC<QuestionPageProps> = ({
   questionSet: questionString,
 }) => {
+  const router = useRouter();
+
+  const onBack = () => {
+    router.back();
+  };
+
   const [questionSet] = useState<QuestionSet>(JSON.parse(questionString));
 
   return (
-    <div className="min-h-screen bg-gray-50 relative">
-      <header className="bg-gray-50 border-y border-gray-200 sticky top-16">
-        <div className="w-full mx-auto px-10 py-4 flex items-center justify-between">
-          <h1 className="text-lg font-semibold text-gray-800">
-            {questionSet.name}
-          </h1>
-          <p>Duration: {questionSet.duration / 60} minutes</p>
+    <div className="min-h-screen bg-gray-50">
+      <header className="bg-white border-b border-gray-200 sticky top-0">
+        <div className="max-w-6xl mx-auto px-2 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={onBack}
+              className="text-gray-600 hover:text-gray-800"
+            >
+              <ArrowLeft size={20} />
+            </button>
+            <h1 className="text-lg font-semibold text-gray-800">
+              {questionSet.name}
+            </h1>
+          </div>
         </div>
       </header>
 
       <main className="max-w-6xl mx-auto px-4 py-6">
-        {questionSet?.questions?.length == 0 && (
-          <div className="flex items-center justify-center py-12 px-4 border-2 border-dashed border-gray-200 rounded-lg mx-10">
-            No question sets!
-          </div>
-        )}
         {questionSet?.questions &&
           questionSet?.questions.length > 0 &&
           questionSet.questions.map((question, index) => (

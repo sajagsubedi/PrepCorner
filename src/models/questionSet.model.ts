@@ -20,7 +20,7 @@ const questionSetSchema = new Schema<QuestionSet>(
     duration: {
       type: Number,
       required: true,
-      min: 1, // duration in minutes or seconds
+      min: 1,
     },
     questionIds: [
       {

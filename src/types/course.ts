@@ -9,6 +9,7 @@ export interface Course {
     fileId: string;
   };
   categories: Array<Category>;
+  isVisible: boolean;
   createdAt: Date;
   updatedAt: Date;
 }

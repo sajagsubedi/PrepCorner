@@ -64,9 +64,12 @@ export async function POST(request: NextRequest) {
     const formData = await request.formData();
     const name = formData.get("name") as string;
     const categoryId = formData.get("categoryId") as string;
+    const duration = formData.get("duration") as string;
 
     if (
-      [name, categoryId].some((field) => field == null || field.trim() === "")
+      [name, categoryId, duration].some(
+        (field) => field == null || field.trim() === ""
+      )
     ) {
       return NextResponse.json(
         {
@@ -78,6 +81,7 @@ export async function POST(request: NextRequest) {
         }
       );
     }
+    const durationInSecs = Number(duration);
 
     const existingCategory = await CategoryModel.findById(categoryId);
 
@@ -96,7 +100,7 @@ export async function POST(request: NextRequest) {
     const newQuestionSet = new QuestionSetModel({
       name,
       categoryId,
-      duration: 3 * 60 * 60,
+      duration: durationInSecs,
     });
 
     await newQuestionSet.save();

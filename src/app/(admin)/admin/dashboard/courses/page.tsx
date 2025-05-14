@@ -35,9 +35,10 @@ export default function CoursesPage() {
 
   const handleSave = async (data: CourseInput) => {
     try {
-      const { name, description, image } = data;
+      const { name, description, image, isVisible } = data;
 
       const formData = new FormData();
+      formData.append("isVisible", String(isVisible));
       if (name) formData.append("name", name);
       if (description) formData.append("description", description);
       if (image) formData.append("image", image);

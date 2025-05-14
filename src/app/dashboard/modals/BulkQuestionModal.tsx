@@ -14,17 +14,15 @@ interface QuestionSetDialogProps {
   open: boolean;
   onSave: (data: questionBulkInput) => Promise<void>;
   onCancel: () => void;
-  onOpenChange: (value: boolean) => void;
 }
 
 export default function BulkQuestionModal({
   open,
   onSave,
-  onOpenChange,
   onCancel,
 }: QuestionSetDialogProps) {
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Add Bulk Questions</DialogTitle>

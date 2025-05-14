@@ -28,12 +28,12 @@ export function CourseForm({
     defaultValues: {
       name: defaultValues?.name || "",
       description: defaultValues?.description || "",
-      isVisible: defaultValues?.isVisible ?? false,
+      isVisible: defaultValues?.isVisible ?? true,
       image: undefined,
     },
   });
-  const [visibility, setVisibility] = useState(
-    defaultValues?.isVisible ?? false
+  const [visibility, setVisibility] = useState<boolean>(
+    defaultValues?.isVisible ?? true
   );
 
   const [imageUrl, setImageUrl] = React.useState<string>(
@@ -83,12 +83,30 @@ export function CourseForm({
           <p className="text-red-500 text-sm">{errors.image.message}</p>
         )}
       </div>
+      <div className="items-center flex gap-2">
+        <span className="text-sm font-medium text-gray-700">Visibility:</span>
+        <button
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            setVisibility((val: boolean) => !val);
+            setValue("isVisible", !visibility);
+          }}
+          className={`p-2 rounded-full ${
+            visibility
+              ? "bg-rose-100 text-rose-500"
+              : "bg-gray-100 text-gray-600"
+          }`}
+        >
+          {visibility ? <Eye size={20} /> : <EyeClosed size={20} />}
+        </button>
+      </div>
       <div className="space-y-2">
         <label
           htmlFor="name"
           className="block text-sm font-medium text-gray-700"
         >
-          Course Name
+          Course Name 2
         </label>
         <input
           id="name"
@@ -119,24 +137,7 @@ export function CourseForm({
           <p className="text-sm text-red-500">{errors.description.message}</p>
         )}
       </div>
-      <div className="items-center flex gap-2">
-        <span className="text-sm font-medium text-gray-700">Visibility:</span>
-        <button
-          type="button"
-          onClick={(e) => {
-            e.preventDefault();
-            setVisibility((val) => !val);
-            setValue("isVisible", !visibility);
-          }}
-          className={`p-2 rounded-full ${
-            visibility
-              ? "bg-primary/10 text-primary"
-              : "bg-gray-100 text-gray-600"
-          }`}
-        >
-          {visibility ? <Eye size={20} /> : <EyeClosed size={20} />}
-        </button>
-      </div>
+
       <div className="flex justify-end gap-2 pt-2">
         <Button variant="outline" onClick={onCancel} type="button">
           Cancel

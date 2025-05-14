@@ -10,7 +10,6 @@ import { Button } from "@/components/ui/button";
 import { QuestionSetInput } from "@/schemas/questionSetSchema";
 import { QuestionSetCard } from "./cards/QuestionSetCard";
 import QuestionSetModal from "./modals/QuestionSetModal";
-import DeleteModal from "../shared/DeleteModal";
 
 interface QuestionSetPageProps {
   questionSets: string;
@@ -22,9 +21,6 @@ export default function QuestionSetPage({
   categoryId,
 }: QuestionSetPageProps) {
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [deleteModal, setDeleteModal] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
-
   const [selectedQuestionSet, setSelectedQuestionSet] =
     useState<QuestionSet | null>(null);
   const [questionSetList, setQuestionSetList] = useState<QuestionSet[]>(
@@ -41,18 +37,9 @@ export default function QuestionSetPage({
     setDialogOpen(true);
   };
 
-  const openDeleteModal = (questionSet: QuestionSet) => {
-    setSelectedQuestionSet(questionSet);
-    setDeleteModal(true);
-  };
-
   const onCancel = () => {
     setSelectedQuestionSet(null);
     setDialogOpen(false);
-  };
-  const cancelDeleteQuestionSet = () => {
-    setDeleteModal(false);
-    setSelectedQuestionSet(null);
   };
 
   const handleSave = async (data: QuestionSetInput) => {
@@ -113,33 +100,6 @@ export default function QuestionSetPage({
     }
   };
 
-  const handleDeleteQuestionSet = async () => {
-    setIsDeleting(true);
-    try {
-      const response = await axios.delete<ApiResponse<undefined>>(
-        `/api/admin/questionsets/${selectedQuestionSet?._id}`
-      );
-      if (response.data.success) {
-        setQuestionSetList((prev) =>
-          prev.filter(
-            (questionSet) => questionSet._id !== selectedQuestionSet?._id
-          )
-        );
-        toast.success(response.data.message);
-      }
-    } catch (error) {
-      const axiosError = error as AxiosError<ApiResponse<QuestionSet>>;
-      const errorMessage =
-        axiosError?.response?.data?.message ||
-        "There was a problem deleting the question set. Please try again.";
-      toast.error(errorMessage);
-    } finally {
-      setIsDeleting(false);
-      setDeleteModal(false);
-      setSelectedQuestionSet(null);
-    }
-  };
-
   return (
     <div className="mx-auto px-7 sm:px-10 bg-transparent w-full">
       <div className="flex justify-between items-center mb-8">
@@ -161,7 +121,6 @@ export default function QuestionSetPage({
           <QuestionSetCard
             key={questionSet._id}
             questionSet={questionSet}
-            onDelete={openDeleteModal}
             onEdit={handleEditClick}
           />
         ))}
@@ -180,14 +139,6 @@ export default function QuestionSetPage({
         onSave={handleSave}
         questionSet={selectedQuestionSet}
         onCancel={onCancel}
-      />
-
-      <DeleteModal
-        isOpen={deleteModal}
-        message="Question Set"
-        isDeleting={isDeleting}
-        onConfirm={handleDeleteQuestionSet}
-        onCancel={cancelDeleteQuestionSet}
       />
     </div>
   );

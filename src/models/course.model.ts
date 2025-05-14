@@ -7,6 +7,7 @@ export interface ICourse extends Document {
     url: string;
     fileId: string;
   };
+  isVisible: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -23,6 +24,10 @@ const courseSchema = new Schema<ICourse>(
     image: {
       url: { type: String, required: true },
       fileId: { type: String, required: true },
+    },
+    isVisible: {
+      type: Boolean,
+      default: true,
     },
     description: {
       type: String,

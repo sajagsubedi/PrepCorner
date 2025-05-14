@@ -9,6 +9,7 @@ import QuestionPage from "@/components/dashboard/QuestionPage";
 import { QuestionSet } from "@/types/questionSet";
 import { ApiResponse } from "@/types/ApiResponse";
 import { UserRole } from "@/types/UserTypes";
+import Loader from "@/components/shared/Loader";
 
 export default function QuestionSetInfoPage() {
   const { data: session, status } = useSession();
@@ -47,12 +48,15 @@ export default function QuestionSetInfoPage() {
     fetchQuestionSet();
   }, [status, session, questionSetId, router]);
 
-  if (loading) return <div>Loading...</div>;
-
   return (
     <main>
       <QuestionManagement questionSetId={questionSetId as string} />
-      {questionSet && (
+      {loading && (
+        <div className="flex items-center justify-center py-12 px-4 border-2 border-dashed border-gray-200 rounded-lg mx-10">
+          <Loader />
+        </div>
+      )}
+      {!loading && questionSet && (
         <>
           <QuestionPage questionSet={JSON.stringify(questionSet)} />
         </>

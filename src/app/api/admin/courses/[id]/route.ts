@@ -27,7 +27,10 @@ export async function PUT(
     const formData = await request.formData();
     const name = formData.get("name") as string;
     const description = formData.get("description") as string;
+    const isVisible = formData.get("isVisible") as string;
     const image = formData.get("image") as File | null;
+
+    console.log(isVisible);
 
     const { id } = await params;
 
@@ -65,6 +68,7 @@ export async function PUT(
     if (name) existingCourse.name = name;
 
     if (description) existingCourse.description = description;
+    if (isVisible) existingCourse.isVisible = isVisible == "true";
 
     await existingCourse.save();
 
