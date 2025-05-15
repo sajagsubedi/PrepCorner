@@ -1,7 +1,7 @@
 import DashboardSideBar from "@/components/dashboard/DashboardSidebar";
 import AdminDashboardGuard from "@/components/wrappers/AdminDashboardGuard";
 import { NavLink } from "@/types/UiTypes";
-import { Home, ShoppingBag, UserIcon } from "lucide-react";
+import { Home, Inbox, ShoppingBag, UserIcon } from "lucide-react";
 
 export default function DashboardLayout({
   children,
@@ -23,6 +23,11 @@ export default function DashboardLayout({
       text: "Users",
       href: "/admin/dashboard/users",
       icon: <UserIcon />,
+    },
+    {
+      text: "Enrollment Requests",
+      href: "/admin/dashboard/enrollmentrequests",
+      icon: <Inbox />,
     },
   ];
 
