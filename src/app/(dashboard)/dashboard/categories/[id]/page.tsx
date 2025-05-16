@@ -17,6 +17,8 @@ import {
 } from "@/components/ui/card";
 import Loader from "@/components/shared/Loader";
 import { toast } from "react-toastify";
+import PracticeDialog from "@/components/shared/PracticeDialog";
+import { TestSession } from "@/models/testSession.model";
 
 export default function CategoryInfoPage() {
   const { data: session, status } = useSession();
@@ -26,6 +28,11 @@ export default function CategoryInfoPage() {
 
   const [category, setCategory] = useState<Category | null>(null);
   const [loading, setLoading] = useState(true);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedQuestionSetId, setSelectedQuestionSetId] =
+    useState<string>("");
+  const [selectedQuestionSetDuration, setSelectedQuestionSetDuration] =
+    useState<number>(0);
 
   useEffect(() => {
     if (status === "loading") return;
@@ -59,16 +66,50 @@ export default function CategoryInfoPage() {
     fetchCategory();
   }, [status, session, categoryId, router]);
 
-  const handlePractice = (id: string) => {
-    console.log("Practice for:", id);
+  const handlePracticeClick = (id: string, duration: number) => {
+    setSelectedQuestionSetId(id);
+    setSelectedQuestionSetDuration(duration);
+    console.log(duration);
+    setDialogOpen(true);
+  };
+
+  const handleDialogClose = () => {
+    setDialogOpen(false);
+  };
+
+  const handleSubmitPractice = async (isExam: boolean, duration: number) => {
+    try {
+      const response = await axios.post<ApiResponse<TestSession>>(
+        `/api/mocktests`,
+        {
+          questionSetId: selectedQuestionSetId,
+          isExam,
+          duration: isExam ? duration * 60 : selectedQuestionSetDuration,
+        }
+      );
+
+      if (response.data.success) {
+        toast.success(response.data.message);
+        if (response.data.data) {
+          router.push(`../my-tests/${response.data.data._id}`);
+        }
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      const axiosError = error as AxiosError<ApiResponse<undefined>>;
+      toast.error(
+        axiosError.response?.data?.message || "Failed to create test."
+      );
+    }
   };
 
   return (
     <section className="p-6">
-      <Button className="items-center justify-center flex">
+      <Button className="items-center justify-center flex mb-5">
         <Link
           className="gap-2 flex items-center justify-center"
-          href={`/admin/dashboard/courses/${category?.courseId}`}
+          href={`/dashboard/my-courses/${category?.courseId}`}
         >
           <ArrowLeft /> Back
         </Link>
@@ -113,25 +154,37 @@ export default function CategoryInfoPage() {
               </p>
             )}
 
-            <div className="grid grid-cols-3 gap-6 p-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
               {category?.questionSets?.map((questionSet, id) => {
                 return (
                   <Card
-                    className="w-full max-w-sm rounded-2xl shadow-md"
+                    className="w-full rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300"
                     key={id}
                   >
-                    <CardContent className="space-y-2">
+                    <CardContent className="space-y-2 pt-6">
                       <div className="flex items-center justify-between">
                         <h2 className="text-xl font-semibold">
                           {questionSet.name}
                         </h2>
                       </div>
-                      <p>Duration: {questionSet.duration / 60} minutes</p>
-                      <p>Questions: {questionSet.questionIds.length}</p>
+                      <p className="text-muted-foreground">
+                        Duration: {questionSet.duration / 60} minutes
+                      </p>
+                      <p className="text-muted-foreground">
+                        Questions: {questionSet.questionIds.length}
+                      </p>
                     </CardContent>
-                    <CardFooter className="flex justify-between">
-                      <Button onClick={() => handlePractice(questionSet._id)}>
-                        Practice
+                    <CardFooter className="flex justify-between pb-6">
+                      <Button
+                        onClick={() =>
+                          handlePracticeClick(
+                            questionSet._id,
+                            questionSet.duration
+                          )
+                        }
+                        className="w-full"
+                      >
+                        Start Practice
                       </Button>
                     </CardFooter>
                   </Card>
@@ -147,6 +200,14 @@ export default function CategoryInfoPage() {
             )}
           </div>
         </Card>
+      )}
+      {dialogOpen && (
+        <PracticeDialog
+          isOpen={dialogOpen}
+          onClose={handleDialogClose}
+          onSubmit={handleSubmitPractice}
+          defaultDuration={selectedQuestionSetDuration}
+        />
       )}
     </section>
   );

@@ -11,7 +11,6 @@ import {
 import CourseModel from "@/models/course.model";
 import mongoose from "mongoose";
 import connectDb from "@/lib/connectDb";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowLeft, Eye } from "lucide-react";
@@ -71,7 +70,7 @@ export default async function CourseInfoPage({
 
   return (
     <section className="p-6">
-      <Button className="items-center justify-center flex">
+      <Button className="items-center justify-center flex mb-5">
         <Link
           className="gap-2 flex items-center justify-center"
           href={`../my-courses`}
@@ -79,7 +78,7 @@ export default async function CourseInfoPage({
           <ArrowLeft /> Back
         </Link>
       </Button>
-      <h2 className="text-3xl font-bold text-primary mb-6 uppercase">
+      <h2 className="text-3xl font-bold text-primary mb-6 uppercase ml-5">
         Course Details
       </h2>
 
@@ -95,16 +94,8 @@ export default async function CourseInfoPage({
               <h3 className="text-3xl font-semibold text-primary">
                 {course.name}
               </h3>
-              <div className="h-64 w-auto rounded overflow-hidden flex justify-center relative">
-                <Image
-                  src={course.image.url}
-                  alt={course.name}
-                  width={400}
-                  height={200}
-                />
-              </div>
             </CardHeader>
-            <div className="w-full flex flex-col gap-3">
+            <div className="w-full flex flex-col gap-3 px-6">
               <p className="text-muted-foreground text-base">
                 {course.description}
               </p>
