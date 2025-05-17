@@ -6,13 +6,14 @@ import { useRouter } from "next/navigation";
 import axios, { AxiosError } from "axios";
 import { ApiResponse } from "@/types/ApiResponse";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import Loader from "@/components/shared/Loader";
 import { toast } from "react-toastify";
 import { formatDistanceToNow, format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { Clock, ListChecks, CalendarClock } from "lucide-react";
 import { TestSession } from "@/types/testSession";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import CourseCardSkeleton from "@/components/dashboard/CourseCardSkeleton";
 
 export default function TestSessionsPage() {
   const { data: session, status } = useSession();
@@ -86,22 +87,26 @@ export default function TestSessionsPage() {
 
     if (session.isSubmitted) {
       return (
-        <Button
-          onClick={() => router.push(`/my-tests/${session._id}/result`)}
-          className="w-full mt-4"
-        >
-          View Result
+        <Button className="flex justify-center items-center w-full mt-4 bg-gray-700 hover:bg-gray-800">
+          <Link
+            href={`./my-tests/${session._id}/result`}
+            className="w-full h-full flex justify-center items-center"
+          >
+            View Result
+          </Link>
         </Button>
       );
     }
 
     if (!session.isExam) {
       return (
-        <Button
-          onClick={() => router.push(`/my-tests/${session._id}`)}
-          className="w-full mt-4"
-        >
-          Continue
+        <Button className="flex justify-center items-center w-full mt-4">
+          <Link
+            href={`./my-tests/${session._id}`}
+            className="w-full h-full flex justify-center items-center"
+          >
+            Continue
+          </Link>
         </Button>
       );
     }
@@ -110,8 +115,8 @@ export default function TestSessionsPage() {
       return (
         <Button
           onClick={() => handleSubmit(session._id)}
-          variant="destructive"
           className="w-full mt-4"
+          variant="destructive"
         >
           Submit (Time Up)
         </Button>
@@ -119,11 +124,13 @@ export default function TestSessionsPage() {
     }
 
     return (
-      <Button
-        onClick={() => router.push(`/my-tests/${session._id}`)}
-        className="w-full mt-4"
-      >
-        Continue
+      <Button className="flex justify-center items-center w-full mt-4">
+        <Link
+          href={`./my-tests/${session._id}`}
+          className="w-full h-full flex justify-center items-center"
+        >
+          Continue
+        </Link>
       </Button>
     );
   };
@@ -141,8 +148,12 @@ export default function TestSessionsPage() {
       <h2 className="text-3xl font-bold text-primary mb-6">My Test Sessions</h2>
 
       {loading && (
-        <div className="flex flex-col items-center justify-center py-12 px-4 border-2 border-dashed border-gray-200 rounded-lg">
-          <Loader />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {Array(6)
+            .fill(0)
+            .map((_, index) => (
+              <CourseCardSkeleton key={index} />
+            ))}
         </div>
       )}
 
@@ -158,7 +169,6 @@ export default function TestSessionsPage() {
             key={session._id}
             className="hover:shadow-lg transition-shadow duration-300 relative gap-3 justify-between"
           >
-            {/* Badge in top-right corner showing Exam or Practice */}
             <Badge
               variant={session.isExam ? "default" : "outline"}
               className="absolute top-3 right-3 z-10"
@@ -172,6 +182,10 @@ export default function TestSessionsPage() {
                   {session.questionSetId?.name || "Test Session"}
                 </h3>
               </div>
+              <p className="text-sm text-muted-foreground">
+                Category:
+                {session.questionSetId?.categoryId?.name || "N/A"}
+              </p>
               <p className="text-sm text-muted-foreground">
                 Course:
                 {session.questionSetId?.categoryId?.courseId?.name || "N/A"}

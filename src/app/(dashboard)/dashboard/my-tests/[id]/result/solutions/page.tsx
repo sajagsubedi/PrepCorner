@@ -5,10 +5,10 @@ import { authOptions } from "@/lib/auth";
 import mongoose from "mongoose";
 import TestSessionModel from "@/models/testSession.model";
 import { PopulatedTestSession } from "@/types/ApiTypes";
+import SolutionList from "@/components/dashboard/SolutionList";
 import connectDb from "@/lib/connectDb";
-import TestSessionPage from "@/components/dashboard/TestSessionPage";
 
-async function fetchTestSession(
+async function fetchSolutions(
   testSessionId: string,
   userId: string
 ): Promise<TestSession | undefined> {
@@ -29,7 +29,7 @@ async function fetchTestSession(
       })
       .populate({
         path: "responses.questionId",
-        select: "_id body answers createdAt updatedAt",
+        select: "_id body answers correctAnswer createdAt updatedAt",
       })
       .lean<PopulatedTestSession>();
 
@@ -57,6 +57,7 @@ async function fetchTestSession(
           _id: response.questionId._id.toString(),
           body: response.questionId.body,
           answers: response.questionId.answers,
+          correctAnswer: response.questionId.correctAnswer,
         },
         markedForLater: response.markedForLater,
         selectedAnswer:
@@ -66,8 +67,6 @@ async function fetchTestSession(
       isExam: testSession.isExam,
       duration: testSession.duration,
       isSubmitted: testSession.isSubmitted,
-      endDate: testSession.endDate,
-      startDate: testSession.startDate,
     };
     return transformedSession as unknown as TestSession;
   } catch (err) {
@@ -76,7 +75,7 @@ async function fetchTestSession(
   }
 }
 
-export default async function Page({
+export default async function SolutionPage({
   params,
 }: {
   params: Promise<{ id: string }>;
@@ -88,11 +87,11 @@ export default async function Page({
   if (!user) {
     redirect("/signin");
   }
-  const testSessionData = await fetchTestSession(id, user._id);
+  const solutionsData = await fetchSolutions(id, user._id);
 
-  if (!testSessionData) {
-    redirect("../");
+  if (!solutionsData) {
+    redirect("../../");
   }
 
-  return <TestSessionPage testSessionProp={JSON.stringify(testSessionData)} />;
+  return <SolutionList testSession={JSON.stringify(solutionsData)} />;
 }

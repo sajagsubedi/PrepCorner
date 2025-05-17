@@ -1,4 +1,13 @@
 import mongoose from "mongoose";
+import "@/models/category.model";
+import "@/models/course.model";
+import "@/models/user.model";
+import "@/models/question.model";
+import "@/models/questionSet.model";
+import "@/models/testSession.model";
+import "@/models/enrollment.model";
+import "@/models/enrollmentRequest.model";
+import "@/models/testResult.model";
 
 type connectionObject = {
   isConnected?: number;

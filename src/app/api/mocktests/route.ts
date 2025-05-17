@@ -6,6 +6,8 @@ import TestSessionModel, { IQuestion } from "@/models/testSession.model";
 import mongoose from "mongoose";
 import { getServerSession, User } from "next-auth";
 import { NextResponse, type NextRequest } from "next/server";
+import "@/models/category.model";
+import "@/models/course.model";
 
 interface TestSessionInput {
   userId: mongoose.Types.ObjectId;
@@ -151,9 +153,7 @@ export async function POST(request: NextRequest) {
     if (isExam) {
       testSessionData.startDate = now;
       // Calculate endDate by adding duration (in minutes) to now
-      testSessionData.endDate = new Date(
-        now.getTime() + testDuration * 60 * 1000
-      );
+      testSessionData.endDate = new Date(now.getTime() + testDuration * 1000);
     }
 
     const testSession = new TestSessionModel(testSessionData);
