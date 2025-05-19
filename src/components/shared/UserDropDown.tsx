@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
 import { UserRole } from "@/types/UserTypes";
+import { useState } from "react";
 
 interface UserDropDownProps {
   userDropDown: boolean;
@@ -17,17 +18,30 @@ const UserDropDown = ({
   changeUserDropDown,
   user,
 }: UserDropDownProps) => {
+  const [isSigningOut, setIsSigningOut] = useState(false);
+
+  const handleSignOut = async () => {
+    setIsSigningOut(true);
+    try {
+      await signOut({ callbackUrl: "/signin" });
+    } catch (error) {
+      console.error("Sign out error:", error);
+      setIsSigningOut(false);
+    }
+  };
+
   return (
     <div className="relative min-w-8">
       <button
         type="button"
         className="flex text-sm rounded-full mr-0"
         onClick={() => changeUserDropDown(!userDropDown)}
+        aria-label="Toggle user menu"
       >
         <Image
           className="w-8 h-8 rounded-full shadow-sm"
-          src={user?.profilePicture?.url || "asssets/user.png"}
-          alt="user photo"
+          src={user?.profilePicture?.url || "/assets/user.png"}
+          alt="User photo"
           width={32}
           height={32}
         />
@@ -72,7 +86,7 @@ const UserDropDown = ({
               Settings
             </Link>
           </li>
-          {user.userRole == UserRole.ADMIN && (
+          {user.userRole === UserRole.ADMIN && (
             <li>
               <Link
                 href="/admin/dashboard"
@@ -84,10 +98,11 @@ const UserDropDown = ({
           )}
           <li>
             <button
-              className="block px-4 py-2 text-sm w-full text-start text-gray-700 hover:bg-gray-100 truncate"
-              onClick={() => signOut()}
+              className="block px-4 py-2 text-sm w-full text-start text-gray-700 hover:bg-gray-100 truncate disabled:opacity-50 disabled:cursor-not-allowed"
+              onClick={handleSignOut}
+              disabled={isSigningOut}
             >
-              Sign out
+              {isSigningOut ? "Signing out..." : "Sign out"}
             </button>
           </li>
         </ul>

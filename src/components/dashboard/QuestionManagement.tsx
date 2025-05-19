@@ -8,8 +8,6 @@ import axios, { AxiosError } from "axios";
 import { ApiResponse } from "@/types/ApiResponse";
 import { toast } from "react-toastify";
 import { QuestionSet } from "@/types/questionSet";
-import { useRouter } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
 import QuestionModal from "./modals/QuestionModal";
 import { Question } from "@/types/question";
 
@@ -30,7 +28,7 @@ const QuestionManagement = ({ questionSetId }: { questionSetId: string }) => {
     setBulkQuestionModal(false);
   };
   const handleQuestionCancel = () => {
-    setBulkQuestionModal(false);
+    setAddQuestionModal(false);
   };
 
   const handleQuestionUpload = async (data: questionInput) => {
@@ -98,18 +96,10 @@ const QuestionManagement = ({ questionSetId }: { questionSetId: string }) => {
       toast.error(errorMessage);
     }
   };
-  const router = useRouter();
-  const onBack = () => {
-    router.back();
-  };
 
   return (
     <>
-      <div className="flex gap-2 justify-between py-3 px-10">
-        <Button onClick={onBack}>
-          <ArrowLeft />
-          Back
-        </Button>
+      <div className="flex gap-2 justify-between py-3 sm:px-10 px-2">
         <div className="flex gap-2 justify-end">
           <Button onClick={handleAddQuestion}>Add Question</Button>
           <Button onClick={handleAddBulkQuestion}>Add Bulk Questions</Button>

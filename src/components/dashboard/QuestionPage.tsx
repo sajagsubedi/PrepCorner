@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import { QuestionSet } from "@/types/questionSet";
 import { renderWithLatex } from "@/helpers/katexRenderer";
+import { ArrowLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface QuestionPageProps {
   questionSet: string;
@@ -12,14 +14,24 @@ const QuestionPage: React.FC<QuestionPageProps> = ({
   questionSet: questionString,
 }) => {
   const [questionSet] = useState<QuestionSet>(JSON.parse(questionString));
+  const router = useRouter();
+
+  const onBack = () => {
+    router.back();
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 relative">
       <header className="bg-gray-50 border-y border-gray-200 sticky top-16">
         <div className="w-full mx-auto px-10 py-4 flex items-center justify-between">
-          <h1 className="text-lg font-semibold text-gray-800">
-            {questionSet.name}
-          </h1>
+          <div className="flex gap-1 items-center">
+            <button onClick={onBack}>
+              <ArrowLeft />
+            </button>
+            <h1 className="text-lg font-semibold text-gray-800">
+              {questionSet.name}
+            </h1>
+          </div>
           <p>Duration: {questionSet.duration / 60} minutes</p>
         </div>
       </header>

@@ -153,6 +153,7 @@ export default function EnrollmentRequestsContent() {
               : r
           )
         );
+        console.log("Prev statistics is ")
         setStatistics((prev) => ({
           ...prev,
           pending: prev.pending - 1,

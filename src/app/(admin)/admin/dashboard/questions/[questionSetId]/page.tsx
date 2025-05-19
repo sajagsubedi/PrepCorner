@@ -1,66 +1,98 @@
-"use client";
-
-import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import axios from "axios";
 import QuestionManagement from "@/components/dashboard/QuestionManagement";
 import QuestionPage from "@/components/dashboard/QuestionPage";
 import { QuestionSet } from "@/types/questionSet";
-import { ApiResponse } from "@/types/ApiResponse";
 import { UserRole } from "@/types/UserTypes";
-import Loader from "@/components/shared/Loader";
+import { redirect } from "next/navigation";
+import connectDb from "@/lib/connectDb";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import mongoose from "mongoose";
+import QuestionSetModel from "@/models/questionSet.model";
 
-export default function QuestionSetInfoPage() {
-  const { data: session, status } = useSession();
-  const router = useRouter();
-  const { questionSetId } = useParams();
-
-  const [questionSet, setQuestionSet] = useState<QuestionSet | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (status === "loading") return;
-
-    if (!session || session.user.userRole !== UserRole.ADMIN) {
-      router.push("/signin");
-      return;
+async function fetchQuestionSet(
+  questionSetId: string
+): Promise<QuestionSet | undefined> {
+  try {
+    await connectDb();
+    if (!mongoose.Types.ObjectId.isValid(questionSetId)) {
+      return undefined;
     }
 
-    const fetchQuestionSet = async () => {
-      try {
-        const res = await axios.get<ApiResponse<QuestionSet>>(
-          `/api/admin/questionsets/${questionSetId}`
-        );
+    const [questionSet] = await QuestionSetModel.aggregate([
+      {
+        $match: {
+          _id: new mongoose.Types.ObjectId(questionSetId),
+        },
+      },
+      {
+        $lookup: {
+          from: "questions",
+          localField: "questionIds",
+          foreignField: "_id",
+          as: "questions",
+        },
+      },
+      {
+        $project: {
+          _id: { $toString: "$_id" },
+          name: 1,
+          duration: 1,
+          categoryId: { $toString: "$categoryId" },
+          questionIds: {
+            $map: {
+              input: "$questionIds",
+              as: "id",
+              in: { $toString: "$$id" },
+            },  
+          },
+          questions: {
+            $map: {
+              input: "$questions",
+              as: "question",
+              in: {
+                _id: { $toString: "$$question._id" },
+                body: "$$question.body",
+                answers: "$$question.answers",
+                correctAnswer: "$$question.correctAnswer",
+                createdAt: "$$question.createdAt",
+                updatedAt: "$$question.updatedAt",
+              },
+            },
+          },
+          createdAt: 1,
+          updatedAt: 1,
+        },
+      },
+    ]);
 
-        if (res.data.success && res.data.data) {
-          setQuestionSet(res.data.data);
-        } else {
-          console.error(res.data.message);
-        }
-      } catch (error) {
-        console.error("Failed to fetch question set:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+    return questionSet;
+  } catch (err) {
+    console.log("Error is: ", err);
+    return undefined;
+  }
+}
 
-    fetchQuestionSet();
-  }, [status, session, questionSetId, router]);
+export default async function QuestionSetInfoPage({
+  params,
+}: {
+  params: Promise<{ questionSetId: string }>;
+}) {
+  const { questionSetId } = await params;
+  const session = await getServerSession(authOptions);
+  const user = session?.user;
 
+  if (!user || user.userRole !== UserRole.ADMIN) {
+    redirect("/signin");
+  }
+  const questionSet = await fetchQuestionSet(questionSetId);
+
+  if (!questionSet) {
+    redirect("../");
+  }
   return (
     <main>
       <QuestionManagement questionSetId={questionSetId as string} />
-      {loading && (
-        <div className="flex items-center justify-center py-12 px-4 border-2 border-dashed border-gray-200 rounded-lg mx-10">
-          <Loader />
-        </div>
-      )}
-      {!loading && questionSet && (
-        <>
-          <QuestionPage questionSet={JSON.stringify(questionSet)} />
-        </>
-      )}
+      <QuestionPage questionSet={JSON.stringify(questionSet)} />
     </main>
   );
 }

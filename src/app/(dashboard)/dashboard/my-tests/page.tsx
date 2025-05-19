@@ -13,7 +13,7 @@ import { Clock, ListChecks, CalendarClock } from "lucide-react";
 import { TestSession } from "@/types/testSession";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import CourseCardSkeleton from "@/components/dashboard/CourseCardSkeleton";
+import CourseCardSkeleton from "@/components/skeleton/CourseCardSkeleton";
 
 export default function TestSessionsPage() {
   const { data: session, status } = useSession();

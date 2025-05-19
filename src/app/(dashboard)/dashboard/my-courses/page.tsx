@@ -6,7 +6,7 @@ import axios, { AxiosError } from "axios";
 import { ApiResponse } from "@/types/ApiResponse";
 import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
-import CourseCardSkeleton from "@/components/dashboard/CourseCardSkeleton";
+import CourseCardSkeleton from "@/components/skeleton/CourseCardSkeleton";
 import Image from "next/image";
 import {
   Card,

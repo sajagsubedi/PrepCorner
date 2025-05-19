@@ -17,7 +17,7 @@ import { toast } from "react-toastify";
 import axios, { AxiosError } from "axios";
 import { Course, courseStatus } from "@/types/course";
 import { ApiResponse } from "@/types/ApiResponse";
-import CourseCardSkeleton from "@/components/dashboard/CourseCardSkeleton";
+import CourseCardSkeleton from "@/components/skeleton/CourseCardSkeleton";
 import { EnrollmentRequest } from "@/types/enrollment";
 
 export default function BrowseCourses() {

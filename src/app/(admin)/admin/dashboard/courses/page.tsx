@@ -9,8 +9,8 @@ import { CourseInput } from "@/schemas/courseSchema";
 import axios, { AxiosError } from "axios";
 import { ApiResponse } from "@/types/ApiResponse";
 import { toast } from "react-toastify";
-import Loader from "@/components/shared/Loader";
 import { Button } from "@/components/ui/button";
+import CourseCardSkeleton from "@/components/skeleton/CourseCardSkeleton";
 
 export default function CoursesPage() {
   const [courses, setCourses] = useState<Course[]>([]);
@@ -125,8 +125,12 @@ export default function CoursesPage() {
         </Button>
       </div>
       {loading && (
-        <div className="flex items-center justify-center py-12 px-4 border-2 border-dashed border-gray-200 rounded-lg">
-          <Loader />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {Array(6)
+            .fill(0)
+            .map((_, index) => (
+              <CourseCardSkeleton key={index} />
+            ))}
         </div>
       )}
 

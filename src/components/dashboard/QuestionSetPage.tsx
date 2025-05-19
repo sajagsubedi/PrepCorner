@@ -141,10 +141,12 @@ export default function QuestionSetPage({
   };
 
   return (
-    <div className="mx-auto px-7 sm:px-10 bg-transparent w-full">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-2xl font-bold text-primary">Question Sets</h1>
-        <Button onClick={handleAddClick}>
+    <div className="mx-auto px-2 sm:px-10 bg-transparent w-full">
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-2">
+        <h1 className="text-2xl font-bold text-primary self-start">
+          Question Sets
+        </h1>
+        <Button className="self-end w-max" onClick={handleAddClick}>
           <Plus size={18} className="mr-2" />
           Add Question Set
         </Button>
@@ -156,7 +158,7 @@ export default function QuestionSetPage({
         </p>
       )}
 
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {questionSetList.map((questionSet: QuestionSet) => (
           <QuestionSetCard
             key={questionSet._id}
