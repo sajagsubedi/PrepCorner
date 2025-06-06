@@ -221,21 +221,21 @@ const TestSessionPage: React.FC<TestSessionPageProps> = ({
                   {index + 1}) {renderWithLatex(response.question.body)}
                 </h2>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {response.question.answers.map((option, optIndex) => (
                     <button
                       key={optIndex}
                       onClick={() =>
                         handleAnswerSelect(response.questionId, optIndex)
                       }
-                      className={`w-full text-left p-4 rounded-lg border transition-all ${
+                      className={`w-full text-left flex gap-2 p-4 rounded-lg border transition-all ${
                         response.selectedAnswer === optIndex
                           ? "border-gray-500 bg-gray-50"
                           : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
                       }`}
                       disabled={testSession.isSubmitted}
                     >
-                      {renderWithLatex(option.answer)}
+                      {optIndex + 1}){renderWithLatex(option.answer)}
                     </button>
                   ))}
                 </div>

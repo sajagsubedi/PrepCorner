@@ -8,7 +8,7 @@ import { ApiResponse } from "@/types/ApiResponse";
 import { TestResult } from "@/types/testResult";
 import { Button } from "@/components/ui/button";
 
-const QuizResultsComponent = () => {
+const TestResultsComponent = () => {
   const router = useRouter();
   const { id } = useParams();
   const [stats, setStats] = useState({
@@ -94,7 +94,7 @@ const QuizResultsComponent = () => {
 
         {/* Header */}
         <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">
-          Quiz Results
+          Test Result
         </h1>
 
         {/* Main Content */}
@@ -178,4 +178,4 @@ const QuizResultsComponent = () => {
   );
 };
 
-export default QuizResultsComponent;
+export default TestResultsComponent;

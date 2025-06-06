@@ -8,6 +8,7 @@ import { getServerSession, User } from "next-auth";
 import { NextResponse, type NextRequest } from "next/server";
 import "@/models/category.model";
 import "@/models/course.model";
+import TestResultModel from "@/models/testResult.model";
 
 interface TestSessionInput {
   userId: mongoose.Types.ObjectId;
@@ -48,9 +49,21 @@ export async function GET() {
       })
       .sort({ createdAt: -1 });
 
+    const sessionsWithResults = await Promise.all(
+      testSessions.map(async (session) => {
+        const result = await TestResultModel.findOne({
+          testSessionId: session._id,
+        });
+        return {
+          ...session.toObject(), // ensures plain JS object (not Mongoose doc)
+          result: result?.toObject() || null, // attach result if exists
+        };
+      })
+    );
+
     return NextResponse.json({
       success: true,
-      data: testSessions,
+      data: sessionsWithResults,
     });
   } catch (error) {
     console.error("Error fetching test sessions:", error);

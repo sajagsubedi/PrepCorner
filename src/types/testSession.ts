@@ -1,4 +1,5 @@
 import { Question } from "./question";
+import { TestResult } from "./testResult";
 
 interface Course {
   _id: string;
@@ -30,6 +31,7 @@ export interface TestSession {
   userId: string;
   questionSetId: QuestionSet;
   responses: QuestionResponse[];
+  result: TestResult | null;
   isSubmitted: boolean;
   duration: number;
   isExam: boolean;

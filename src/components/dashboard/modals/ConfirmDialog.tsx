@@ -75,11 +75,7 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
           <Button variant="outline" onClick={onCancel}>
             Cancel
           </Button>
-          <Button
-            className="bg-gray-800 text-white hover:bg-gray-700 disabled:bg-gray-600"
-            onClick={onSubmit}
-            disabled={isSubmitting}
-          >
+          <Button onClick={onSubmit} disabled={isSubmitting}>
             {!isSubmitting ? "Submit" : "Submitting..."}
           </Button>
         </DialogFooter>
