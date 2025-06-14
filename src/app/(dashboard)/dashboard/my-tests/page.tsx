@@ -13,7 +13,7 @@ import { Clock, ListChecks } from "lucide-react";
 import { TestSession } from "@/types/testSession";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import CourseCardSkeleton from "@/components/skeleton/CourseCardSkeleton";
+import TestCardSkeleton from "@/components/skeleton/TestCardSkeleton";
 
 export default function TestSessionsPage() {
   const { data: session, status } = useSession();
@@ -126,7 +126,7 @@ export default function TestSessionsPage() {
           {Array(8)
             .fill(0)
             .map((_, index) => (
-              <CourseCardSkeleton key={index} />
+              <TestCardSkeleton key={index} />
             ))}
         </div>
       )}
