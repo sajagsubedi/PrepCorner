@@ -5,7 +5,6 @@ import { type NextRequest, NextResponse } from "next/server";
 import imagekit from "@/lib/imagekit";
 
 export const POST = async (request: NextRequest) => {
-  console.log("FOr signup");
   // Connect to the database
   await connectDb();
   try {
@@ -124,8 +123,6 @@ export const POST = async (request: NextRequest) => {
         { status: 500 }
       );
     }
-
-    console.log("Email response is", emailResponse);
 
     // Return a success response
     return NextResponse.json(
