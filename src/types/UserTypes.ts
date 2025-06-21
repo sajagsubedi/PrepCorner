@@ -5,11 +5,11 @@ export enum UserRole {
 
 export interface PUser {
   _id: string;
-  fullName?: string;
-  email?: string;
-  profilePicture?: {
+  fullName: string;
+  email: string;
+  profilePicture: {
     url: string;
   };
-  verificationCodeExpiry?: Date;
-  isVerified?: boolean;
+  verificationCodeExpiry: Date;
+  isVerified: boolean;
 }
